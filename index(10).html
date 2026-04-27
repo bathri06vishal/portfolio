@@ -134,6 +134,23 @@
     text-shadow:0 0 10px rgba(0,212,255,0.8);
   }
   .nav-links a:hover::before,.nav-links a.active::before{width:100%;}
+  
+  /* Mobile Navigation */
+  .mobile-menu-toggle{
+    display:none;
+    background:none;
+    border:none;
+    color:var(--accent);
+    font-size:1.5rem;
+    cursor:pointer;
+    padding:8px;
+    border-radius:4px;
+    transition:all 0.3s ease;
+  }
+  .mobile-menu-toggle:hover{
+    background:rgba(0,212,255,0.1);
+    transform:scale(1.1);
+  }
 
   #hero{
     position:relative;
@@ -1317,7 +1334,24 @@
   }
 
   @media(max-width:768px){
-    nav{padding:16px 20px;} .nav-links{display:none;}
+    nav{padding:16px 20px; justify-content:space-between;}
+    .mobile-menu-toggle{display:block;}
+    .nav-links{
+      display:none;
+      position:absolute;
+      top:100%;
+      left:0;
+      right:0;
+      background:var(--bg-deep);
+      flex-direction:column;
+      gap:0;
+      padding:20px;
+      border-top:1px solid var(--border);
+      box-shadow:0 10px 30px rgba(0,0,0,0.5);
+      z-index:1000;
+    }
+    .nav-links.active{display:flex;}
+    .nav-links li{padding:10px 0;}
     #hero,section{padding:40px 20px 30px;}
     .focus-grid,.articles-grid{grid-template-columns:1fr;}
     .connect-grid{grid-template-columns:repeat(2,1fr);}
@@ -1328,7 +1362,24 @@
     .page-title{font-size:clamp(2.5rem,8vw,4rem);}
   }
   @media(max-width:640px){
-    nav{padding:16px 20px;} .nav-links{display:none;}
+    nav{padding:16px 20px; justify-content:space-between;}
+    .mobile-menu-toggle{display:block;}
+    .nav-links{
+      display:none;
+      position:absolute;
+      top:100%;
+      left:0;
+      right:0;
+      background:var(--bg-deep);
+      flex-direction:column;
+      gap:0;
+      padding:20px;
+      border-top:1px solid var(--border);
+      box-shadow:0 10px 30px rgba(0,0,0,0.5);
+      z-index:1000;
+    }
+    .nav-links.active{display:flex;}
+    .nav-links li{padding:10px 0;}
     .page-hero,section{padding-left:20px;padding-right:20px;}
     .events-grid{grid-template-columns:1fr;}
     .event-card.featured{grid-column:span 1;}
@@ -1843,7 +1894,8 @@
 
 <nav>
   <a href="#hero" class="nav-logo">BV_</a>
-  <ul class="nav-links">
+  <button class="mobile-menu-toggle" id="mobileMenuToggle">☰</button>
+  <ul class="nav-links" id="navLinks">
     <li><a href="#linkedin">LinkedIn</a></li>
     <li><a href="#youtube">Videos</a></li>
     <li><a href="#writing">Articles</a></li>
@@ -2123,6 +2175,33 @@ function typeWriter() {
 window.addEventListener('load', () => {
   setTimeout(typeWriter, 500);
 });
+
+// Mobile Menu Toggle
+const mobileMenuToggle = document.getElementById('mobileMenuToggle');
+const navLinks = document.getElementById('navLinks');
+
+if (mobileMenuToggle && navLinks) {
+  mobileMenuToggle.addEventListener('click', () => {
+    navLinks.classList.toggle('active');
+    mobileMenuToggle.textContent = navLinks.classList.contains('active') ? '✕' : '☰';
+  });
+  
+  // Close menu when clicking on a link
+  navLinks.querySelectorAll('a').forEach(link => {
+    link.addEventListener('click', () => {
+      navLinks.classList.remove('active');
+      mobileMenuToggle.textContent = '☰';
+    });
+  });
+  
+  // Close menu when clicking outside
+  document.addEventListener('click', (e) => {
+    if (!navLinks.contains(e.target) && !mobileMenuToggle.contains(e.target)) {
+      navLinks.classList.remove('active');
+      mobileMenuToggle.textContent = '☰';
+    }
+  });
+}
 
 // ── 6 REAL VIDEOS ──────────────────────────────────────────────
 const videos = [
