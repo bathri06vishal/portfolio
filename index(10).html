@@ -1732,7 +1732,132 @@
     }
     100%{
       opacity:0;
-      transform:translate(var(--x), var(--y)) scale(0.5);
+      transform:translate(var(--x, 0), var(--y, -100px)) scale(0.5);
+    }
+  }
+  
+  /* Chatbot Styles */
+  .chatbot{
+    position:fixed;
+    bottom:100px;
+    right:30px;
+    width:320px;
+    height:400px;
+    background:var(--bg-deep);
+    border:1px solid var(--border);
+    border-radius:12px;
+    box-shadow:0 10px 40px rgba(0,0,0,0.8);
+    display:none;
+    flex-direction:column;
+    z-index:10000;
+    overflow:hidden;
+  }
+  
+  .chatbot.active{
+    display:flex;
+  }
+  
+  .chatbot-header{
+    background:linear-gradient(135deg, var(--accent), var(--accent2));
+    color:white;
+    padding:12px 16px;
+    font-weight:600;
+    font-size:0.9rem;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+  }
+  
+  .chatbot-close{
+    background:none;
+    border:none;
+    color:white;
+    font-size:1.2rem;
+    cursor:pointer;
+    padding:4px;
+    border-radius:4px;
+    transition:background 0.2s;
+  }
+  
+  .chatbot-close:hover{
+    background:rgba(255,255,255,0.2);
+  }
+  
+  .chatbot-messages{
+    flex:1;
+    padding:16px;
+    overflow-y:auto;
+    display:flex;
+    flex-direction:column;
+    gap:12px;
+  }
+  
+  .message{
+    max-width:80%;
+    padding:8px 12px;
+    border-radius:12px;
+    font-size:0.85rem;
+    line-height:1.4;
+    word-wrap:break-word;
+  }
+  
+  .message.bot{
+    background:var(--accent);
+    color:white;
+    align-self:flex-start;
+  }
+  
+  .message.user{
+    background:var(--bg-light);
+    color:var(--text);
+    border:1px solid var(--border);
+    align-self:flex-end;
+  }
+  
+  .chatbot-input{
+    padding:12px 16px;
+    border-top:1px solid var(--border);
+    display:flex;
+    gap:8px;
+  }
+  
+  .chatbot-input input{
+    flex:1;
+    background:var(--bg-light);
+    border:1px solid var(--border);
+    color:var(--text);
+    padding:8px 12px;
+    border-radius:6px;
+    font-size:0.85rem;
+    outline:none;
+  }
+  
+  .chatbot-input input:focus{
+    border-color:var(--accent);
+  }
+  
+  .chatbot-input button{
+    background:var(--accent);
+    color:white;
+    border:none;
+    padding:8px 16px;
+    border-radius:6px;
+    font-size:0.85rem;
+    cursor:pointer;
+    transition:background 0.2s;
+  }
+  
+  .chatbot-input button:hover{
+    background:var(--accent2);
+  }
+  
+  /* Mobile chatbot */
+  @media(max-width:480px){
+    .chatbot{
+      width:calc(100vw - 40px);
+      right:20px;
+      bottom:80px;
+      height:350px;
     }
   }
   
@@ -1879,6 +2004,21 @@
     <div class="robot-arm right"></div>
     <div class="robot-leg left"></div>
     <div class="robot-leg right"></div>
+  </div>
+</div>
+
+<!-- Chatbot -->
+<div class="chatbot" id="chatbot">
+  <div class="chatbot-header">
+    <span>🤖 Bathri Bot</span>
+    <button class="chatbot-close" id="chatbotClose">✕</button>
+  </div>
+  <div class="chatbot-messages" id="chatbotMessages">
+    <div class="message bot">Hi! I'm Bathri's AI assistant. Ask me about robotics, projects, or anything! 🚀</div>
+  </div>
+  <div class="chatbot-input">
+    <input type="text" id="chatbotInput" placeholder="Type your message..." />
+    <button id="chatbotSend">Send</button>
   </div>
 </div>
 
@@ -2203,6 +2343,86 @@ if (mobileMenuToggle && navLinks) {
   });
 }
 
+// Toggle chatbot
+function toggleChatbot() {
+  chatbot.classList.toggle('active');
+  if (chatbot.classList.contains('active')) {
+    chatbotInput.focus();
+  }
+}
+
+// Chatbot functionality
+const chatbot = document.getElementById('chatbot');
+const chatbotClose = document.getElementById('chatbotClose');
+const chatbotInput = document.getElementById('chatbotInput');
+const chatbotSend = document.getElementById('chatbotSend');
+const chatbotMessages = document.getElementById('chatbotMessages');
+
+chatbotClose.addEventListener('click', () => {
+  chatbot.classList.remove('active');
+});
+
+// Simple chatbot responses
+const botResponses = {
+  'hello': 'Hi there! How can I help you today?',
+  'hi': 'Hello! Ask me anything about Bathri\'s work!',
+  'projects': 'Bathri has worked on Gemini 1.6 robotics, Open Duck Mini simulation, Dodo-CLI task manager, and more! Check out the Projects section.',
+  'robotics': 'Bathri is passionate about Physical AI and robotics! He works with simulations, ROS2, and embodied intelligence.',
+  'contact': 'You can reach Bathri through LinkedIn, GitHub, or email. Check the Connect section!',
+  'skills': 'Bathri specializes in Physical AI, robotics simulations, Python, and technical writing.',
+  'education': 'Bathri studies ECE at Saranathan College of Engineering in Trichy.',
+  'default': 'Interesting! Tell me more or check out the portfolio sections for detailed information.'
+};
+
+function getBotResponse(message) {
+  const lowerMessage = message.toLowerCase();
+  
+  for (const [key, response] of Object.entries(botResponses)) {
+    if (lowerMessage.includes(key)) {
+      return response;
+    }
+  }
+  return botResponses.default;
+}
+
+function sendMessage() {
+  const message = chatbotInput.value.trim();
+  if (!message) return;
+  
+  // Add user message
+  const userMsg = document.createElement('div');
+  userMsg.className = 'message user';
+  userMsg.textContent = message;
+  chatbotMessages.appendChild(userMsg);
+  
+  // Clear input
+  chatbotInput.value = '';
+  
+  // Simulate bot typing
+  setTimeout(() => {
+    const botMsg = document.createElement('div');
+    botMsg.className = 'message bot';
+    botMsg.textContent = getBotResponse(message);
+    chatbotMessages.appendChild(botMsg);
+    
+    // Scroll to bottom
+    chatbotMessages.scrollTop = chatbotMessages.scrollHeight;
+  }, 500);
+  
+  // Scroll to bottom
+  chatbotMessages.scrollTop = chatbotMessages.scrollHeight;
+}
+
+// Send message on button click
+chatbotSend.addEventListener('click', sendMessage);
+
+// Send message on Enter key
+chatbotInput.addEventListener('keypress', (e) => {
+  if (e.key === 'Enter') {
+    sendMessage();
+  }
+});
+
 // ── 6 REAL VIDEOS ──────────────────────────────────────────────
 const videos = [
   {
@@ -2510,11 +2730,13 @@ document.head.appendChild(style);
 createParticles();
 
 // Robot mascot interactions
-const robotMascot = document.getElementById('robotMascot');
 const robotLoader = document.getElementById('robotLoader');
 
-// Robot mascot click interaction
+// Robot mascot click interaction - merged with chatbot functionality
 robotMascot.addEventListener('click', () => {
+  // Toggle chatbot
+  toggleChatbot();
+  
   // Create particle explosion
   createRobotParticleExplosion(robotMascot.getBoundingClientRect());
   
