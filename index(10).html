@@ -1743,10 +1743,10 @@
     right:30px;
     width:320px;
     height:400px;
-    background:var(--bg-deep);
-    border:1px solid var(--border);
+    background:#000000;
+    border:1px solid #333333;
     border-radius:12px;
-    box-shadow:0 10px 40px rgba(0,0,0,0.8);
+    box-shadow:0 10px 40px rgba(0,0,0,0.9);
     display:none;
     flex-direction:column;
     z-index:10000;
@@ -1758,20 +1758,21 @@
   }
   
   .chatbot-header{
-    background:linear-gradient(135deg, var(--accent), var(--accent2));
-    color:white;
+    background:linear-gradient(135deg, #1a1a1a, #2a2a2a);
+    color:#ffffff;
     padding:12px 16px;
     font-weight:600;
     font-size:0.9rem;
     display:flex;
     justify-content:space-between;
     align-items:center;
+    border-bottom:1px solid #333333;
   }
   
   .chatbot-close{
     background:none;
     border:none;
-    color:white;
+    color:#ffffff;
     font-size:1.2rem;
     cursor:pointer;
     padding:4px;
@@ -1780,7 +1781,7 @@
   }
   
   .chatbot-close:hover{
-    background:rgba(255,255,255,0.2);
+    background:rgba(255,255,255,0.1);
   }
   
   .chatbot-messages{
@@ -1790,6 +1791,7 @@
     display:flex;
     flex-direction:column;
     gap:12px;
+    background:#000000;
   }
   
   .message{
@@ -1802,30 +1804,32 @@
   }
   
   .message.bot{
-    background:var(--accent);
-    color:white;
+    background:#1a1a1a;
+    color:#ffffff;
+    border:1px solid #333333;
     align-self:flex-start;
   }
   
   .message.user{
-    background:var(--bg-light);
-    color:var(--text);
-    border:1px solid var(--border);
+    background:#2a2a2a;
+    color:#ffffff;
+    border:1px solid #444444;
     align-self:flex-end;
   }
   
   .chatbot-input{
     padding:12px 16px;
-    border-top:1px solid var(--border);
+    border-top:1px solid #333333;
     display:flex;
     gap:8px;
+    background:#000000;
   }
   
   .chatbot-input input{
     flex:1;
-    background:var(--bg-light);
-    border:1px solid var(--border);
-    color:var(--text);
+    background:#1a1a1a;
+    border:1px solid #333333;
+    color:#ffffff;
     padding:8px 12px;
     border-radius:6px;
     font-size:0.85rem;
@@ -1833,13 +1837,17 @@
   }
   
   .chatbot-input input:focus{
-    border-color:var(--accent);
+    border-color:#555555;
+  }
+  
+  .chatbot-input input::placeholder{
+    color:#888888;
   }
   
   .chatbot-input button{
-    background:var(--accent);
-    color:white;
-    border:none;
+    background:#2a2a2a;
+    color:#ffffff;
+    border:1px solid #444444;
     padding:8px 16px;
     border-radius:6px;
     font-size:0.85rem;
@@ -1848,7 +1856,7 @@
   }
   
   .chatbot-input button:hover{
-    background:var(--accent2);
+    background:#3a3a3a;
   }
   
   /* Mobile chatbot */
@@ -1858,6 +1866,58 @@
       right:20px;
       bottom:80px;
       height:350px;
+    }
+  }
+  
+  /* Music Control Styles */
+  .music-toggle{
+    position:fixed;
+    top:20px;
+    right:20px;
+    width:50px;
+    height:50px;
+    border-radius:50%;
+    background:linear-gradient(135deg, #1a1a1a, #2a2a2a);
+    border:2px solid #333333;
+    color:#ffffff;
+    font-size:1.2rem;
+    cursor:pointer;
+    z-index:9999;
+    transition:all 0.3s ease;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    box-shadow:0 4px 15px rgba(0,0,0,0.5);
+  }
+  
+  .music-toggle:hover{
+    transform:scale(1.1);
+    background:linear-gradient(135deg, #2a2a2a, #3a3a3a);
+    border-color:#555555;
+  }
+  
+  .music-toggle.playing{
+    animation:musicPulse 2s ease-in-out infinite;
+  }
+  
+  @keyframes musicPulse{
+    0%,100%{transform:scale(1); box-shadow:0 4px 15px rgba(0,0,0,0.5);}
+    50%{transform:scale(1.05); box-shadow:0 6px 20px rgba(0,212,255,0.3);}
+  }
+  
+  .music-toggle.muted{
+    opacity:0.6;
+    background:linear-gradient(135deg, #333333, #444444);
+  }
+  
+  /* Mobile music toggle */
+  @media(max-width:480px){
+    .music-toggle{
+      top:15px;
+      right:15px;
+      width:40px;
+      height:40px;
+      font-size:1rem;
     }
   }
   
@@ -2031,6 +2091,15 @@
     <div class="robot-loader-part"></div>
   </div>
 </div>
+
+<!-- Space Background Music -->
+<audio id="spaceMusic" loop>
+  <source src="https://www.soundjay.com/misc/sounds/space-ambient-1.mp3" type="audio/mpeg">
+  <source src="https://www.bensound.com/bensound-music/bensound-sci-fi.mp3" type="audio/mpeg">
+</audio>
+
+<!-- Music Control Button -->
+<button class="music-toggle" id="musicToggle">🎵</button>
 
 <nav>
   <a href="#hero" class="nav-logo">BV_</a>
@@ -2420,6 +2489,61 @@ chatbotSend.addEventListener('click', sendMessage);
 chatbotInput.addEventListener('keypress', (e) => {
   if (e.key === 'Enter') {
     sendMessage();
+  }
+});
+
+// Music Control Functionality
+const spaceMusic = document.getElementById('spaceMusic');
+const musicToggle = document.getElementById('musicToggle');
+let isMusicPlaying = false;
+
+// Initialize music volume
+spaceMusic.volume = 0.3; // Set to 30% volume
+
+// Music toggle functionality
+musicToggle.addEventListener('click', () => {
+  if (isMusicPlaying) {
+    spaceMusic.pause();
+    musicToggle.textContent = '🎵';
+    musicToggle.classList.remove('playing');
+    musicToggle.classList.add('muted');
+    isMusicPlaying = false;
+  } else {
+    // Try to play music
+    spaceMusic.play().then(() => {
+      musicToggle.textContent = '🎶';
+      musicToggle.classList.add('playing');
+      musicToggle.classList.remove('muted');
+      isMusicPlaying = true;
+    }).catch(error => {
+      console.log('Music playback failed:', error);
+      // Try alternative music source
+      spaceMusic.src = 'https://www.bensound.com/bensound-music/bensound-sci-fi.mp3';
+      spaceMusic.play().then(() => {
+        musicToggle.textContent = '🎶';
+        musicToggle.classList.add('playing');
+        musicToggle.classList.remove('muted');
+        isMusicPlaying = true;
+      }).catch(err => {
+        console.log('Alternative music source also failed:', err);
+        musicToggle.textContent = '🔇';
+        musicToggle.classList.add('muted');
+      });
+    });
+  }
+});
+
+// Handle music loading errors
+spaceMusic.addEventListener('error', (e) => {
+  console.log('Music loading error:', e);
+  musicToggle.textContent = '🔇';
+  musicToggle.classList.add('muted');
+});
+
+// Handle music ending (should loop, but just in case)
+spaceMusic.addEventListener('ended', () => {
+  if (isMusicPlaying) {
+    spaceMusic.play();
   }
 });
 
