@@ -1087,6 +1087,221 @@
     color:var(--accent3);
     text-shadow:0 0 10px rgba(0,255,136,0.5);
   }
+  
+  /* RESUME */
+  .resume-container{
+    max-width:800px;
+    margin:0 auto;
+  }
+  
+  .resume-preview{
+    background:var(--surface-glass);
+    backdrop-filter:blur(20px) saturate(180%);
+    border:1px solid var(--border);
+    border-radius:16px;
+    padding:32px;
+    display:flex;
+    align-items:center;
+    gap:24px;
+    position:relative;
+    overflow:hidden;
+    transition:all 0.4s ease;
+  }
+  
+  .resume-preview::before{
+    content:'';
+    position:absolute;
+    top:0;
+    left:0;
+    right:0;
+    height:2px;
+    background:linear-gradient(90deg, var(--accent), var(--accent2), var(--accent3));
+    opacity:0.8;
+    transition:all 0.4s ease;
+  }
+  
+  .resume-preview:hover{
+    border-color:var(--border-glow);
+    transform:translateY(-8px) scale(1.02);
+    box-shadow:0 20px 60px rgba(0,255,136,0.3), 0 0 40px rgba(0,255,136,0.1);
+  }
+  
+  .resume-preview:hover::before{
+    opacity:1;
+    height:4px;
+  }
+  
+  .resume-icon{
+    font-size:3rem;
+    filter:drop-shadow(0 0 10px rgba(0,255,136,0.5));
+    transition:all 0.3s ease;
+  }
+  
+  .resume-preview:hover .resume-icon{
+    transform:scale(1.2);
+    filter:drop-shadow(0 0 20px rgba(0,255,136,0.8));
+  }
+  
+  .resume-info{
+    flex:1;
+  }
+  
+  .resume-info h3{
+    font-size:1.5rem;
+    font-weight:600;
+    margin-bottom:8px;
+    color:var(--text);
+    transition:color 0.3s ease;
+  }
+  
+  .resume-preview:hover .resume-info h3{
+    color:var(--accent3);
+    text-shadow:0 0 10px rgba(0,255,136,0.5);
+  }
+  
+  .resume-info p{
+    color:var(--text-secondary);
+    line-height:1.6;
+    margin-bottom:20px;
+  }
+  
+  .resume-actions{
+    display:flex;
+    gap:12px;
+    flex-wrap:wrap;
+  }
+  
+  .resume-btn{
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    padding:12px 20px;
+    border-radius:8px;
+    font-weight:500;
+    text-decoration:none;
+    border:1px solid var(--border);
+    transition:all 0.3s ease;
+    cursor:pointer;
+    font-size:0.9rem;
+  }
+  
+  .resume-btn.primary{
+    background:linear-gradient(135deg, var(--accent), var(--accent2));
+    color:white;
+    border-color:transparent;
+  }
+  
+  .resume-btn.primary:hover{
+    transform:translateY(-2px);
+    box-shadow:0 8px 25px rgba(0,255,136,0.4);
+  }
+  
+  .resume-btn.secondary{
+    background:var(--surface-glass);
+    color:var(--text);
+    backdrop-filter:blur(10px);
+  }
+  
+  .resume-btn.secondary:hover{
+    background:var(--surface-glass-hover);
+    border-color:var(--accent);
+    color:var(--accent);
+  }
+  
+  /* Resume Modal */
+  .resume-modal{
+    display:none;
+    position:fixed;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    background:rgba(0,0,0,0.8);
+    z-index:10000;
+    align-items:center;
+    justify-content:center;
+    padding:20px;
+  }
+  
+  .resume-modal.active{
+    display:flex;
+  }
+  
+  .modal-content{
+    background:var(--bg-deep);
+    border:1px solid var(--border);
+    border-radius:16px;
+    width:100%;
+    max-width:900px;
+    max-height:90vh;
+    overflow:hidden;
+    position:relative;
+  }
+  
+  .modal-header{
+    padding:20px 24px;
+    border-bottom:1px solid var(--border);
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+  }
+  
+  .modal-header h3{
+    color:var(--text);
+    font-size:1.3rem;
+    font-weight:600;
+  }
+  
+  .modal-close{
+    background:none;
+    border:none;
+    color:var(--text-secondary);
+    font-size:1.5rem;
+    cursor:pointer;
+    padding:4px;
+    border-radius:4px;
+    transition:all 0.2s ease;
+  }
+  
+  .modal-close:hover{
+    background:var(--surface-glass);
+    color:var(--text);
+  }
+  
+  .modal-body{
+    padding:0;
+    height:calc(90vh - 80px);
+    min-height:400px;
+  }
+  
+  .modal-body iframe{
+    border:none;
+    width:100%;
+    height:100%;
+  }
+  
+  /* Mobile Resume */
+  @media(max-width:768px){
+    .resume-preview{
+      flex-direction:column;
+      text-align:center;
+      gap:20px;
+      padding:24px;
+    }
+    
+    .resume-actions{
+      justify-content:center;
+    }
+    
+    .modal-content{
+      margin:10px;
+      max-height:95vh;
+    }
+    
+    .modal-body{
+      height:calc(95vh - 80px);
+    }
+  }
   .edu-info p{
     color:var(--text-muted);
     font-size:.9rem;
@@ -2049,6 +2264,7 @@
     <li><a href="#projects">Projects</a></li>
     <li><a href="events(7).html">Events</a></li>
     <li><a href="#education">Education</a></li>
+    <li><a href="#resume">Resume</a></li>
     <li><a href="#connect">Connect</a></li>
   </ul>
 </nav>
@@ -2235,6 +2451,42 @@
       <p>Core subjects: RF & Microwave Engineering, Maxwell's Equations, Waveguide Theory, HEMT, MMIC, LNA Design, S-parameters, Antenna Theory, Digital Signal Processing.</p>
       <p style="margin-top:8px;">Applying ECE fundamentals to robotics hardware — sensor interfacing, embedded systems, and edge AI for physical intelligence applications.</p>
       <span class="edu-badge">Saranathan College of Engineering, Trichy · India</span>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- RESUME -->
+<section id="resume">
+  <p class="section-label">// professional profile</p>
+  <h2 class="section-title">Resume</h2>
+  <div class="resume-container fade-in">
+    <div class="resume-preview">
+      <div class="resume-icon">📄</div>
+      <div class="resume-info">
+        <h3>Download My Resume</h3>
+        <p>Get a complete overview of my skills, experience, and projects</p>
+        <div class="resume-actions">
+          <a href="bathrivishal.pdf" download="bathrivishal.pdf" class="resume-btn primary">
+            <span>📥</span> Download PDF
+          </a>
+          <button class="resume-btn secondary" id="viewResumeBtn">
+            <span>👁️</span> View Online
+          </button>
+        </div>
+      </div>
+    </div>
+    <div class="resume-modal" id="resumeModal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3>My Resume</h3>
+          <button class="modal-close" id="closeResumeModal">✕</button>
+        </div>
+        <div class="modal-body">
+          <iframe src="bathrivishal.pdf" width="100%" height="600px"></iframe>
+        </div>
+      </div>
     </div>
   </div>
 </section>
@@ -2756,6 +3008,39 @@ robotMascot.addEventListener('click', () => {
   
   // Make robot speak (console message for now)
   console.log('🤖 Robot says: Welcome to my space station!');
+});
+
+// Resume Modal Functionality
+const viewResumeBtn = document.getElementById('viewResumeBtn');
+const resumeModal = document.getElementById('resumeModal');
+const closeResumeModal = document.getElementById('closeResumeModal');
+
+// Open resume modal
+viewResumeBtn.addEventListener('click', () => {
+  resumeModal.classList.add('active');
+  document.body.style.overflow = 'hidden'; // Prevent background scrolling
+});
+
+// Close resume modal
+closeResumeModal.addEventListener('click', () => {
+  resumeModal.classList.remove('active');
+  document.body.style.overflow = 'auto'; // Restore background scrolling
+});
+
+// Close modal when clicking outside
+resumeModal.addEventListener('click', (e) => {
+  if (e.target === resumeModal) {
+    resumeModal.classList.remove('active');
+    document.body.style.overflow = 'auto';
+  }
+});
+
+// Close modal with Escape key
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape' && resumeModal.classList.contains('active')) {
+    resumeModal.classList.remove('active');
+    document.body.style.overflow = 'auto';
+  }
 });
 
 // Robot mascot hover particle trail
